@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { BookContext } from "@/components/BooksContext";
 import { IBook } from "@/types/booksType";
@@ -9,11 +9,30 @@ import ListedBooksCard from "@/components/shared/ListedBooksCard";
 const ListBook = () => {
   const context = useContext(BookContext);
 
+  const [sortBy, setSortBy] = useState<"rating" | "pages" | "year">("rating");
+
+  const sortBooks = (books :IBook[]) =>{
+    const sortedBooks =[...books]
+
+    if(sortBy ==="rating"){
+      sortedBooks.sort((a,b) =>b.rating - a.rating);
+
+    }else if(sortBy === "pages"){
+      sortedBooks.sort((a,b)=> b.totalPages - a.totalPages)
+    }else if(sortBy === "year"){
+      sortedBooks.sort((a,b)=> b.yearOfPublishing- a.yearOfPublishing)
+    }
+
+    return sortedBooks;
+  }
+
   if (!context) {
     return null;
   }
 
   const { readBooks, wishlist } = context;
+  const sortedReadBooks = sortBooks(readBooks);
+  const sortedWishlist = sortBooks(wishlist);
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-20">
@@ -24,6 +43,22 @@ const ListBook = () => {
           📚 Listed Books
         </h2>
       </div>
+
+
+
+     <div className="text-center my-4">
+       <select
+       value={sortBy}
+       onChange={(e)=> setSortBy(e.target.value as "rating" | "pages" | "year")}
+       defaultValue="Pick a Runtime"
+        className="select select-success">
+        <option disabled={true}>Sort by</option>
+        <option value={"rating"}>Rating</option>
+        <option value={"pages"}>Number of Paages</option>
+        <option value={"year"}>Published Year</option>
+      </select>
+     </div>
+
 
       {/* Tabs */}
       <div className="tabs tabs-border w-full">
@@ -40,8 +75,8 @@ const ListBook = () => {
         <div className="tab-content w-full pt-6">
           <div className="flex flex-col gap-5">
 
-            {readBooks.length > 0 ? (
-              readBooks.map((book: IBook) => (
+            {sortedReadBooks.length > 0 ? (
+              sortedReadBooks.map((book: IBook) => (
                 <ListedBooksCard
                   key={book.bookId}
                   book={{
@@ -78,8 +113,8 @@ const ListBook = () => {
         <div className="tab-content w-full pt-6">
           <div className="flex flex-col gap-5">
 
-            {wishlist.length > 0 ? (
-              wishlist.map((book: IBook) => (
+            {sortedWishlist.length > 0 ? (
+              sortedWishlist.map((book: IBook) => (
                 <ListedBooksCard
                   key={book.bookId}
                   book={{
