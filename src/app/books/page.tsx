@@ -1,25 +1,21 @@
 import { IBook } from "@/types/booksType";
 import BookCard from "@/components/shared/BookCard";
+import fs from "fs/promises";
+import path from "path";
 
 const getBooks = async (): Promise<IBook[]> => {
-  let response: Response;
+  // Production / Build time-এ সরাসরি ফাইল সিস্টেম থেকে ডেটা পড়া
+  if (process.env.NODE_ENV === "production" || typeof window === "undefined") {
+    const filePath = path.join(process.cwd(), "public", "booksData.json");
+    const jsonData = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(jsonData);
+  }
 
-  // Environment Variable না থাকলে fallback URL ব্যবহার করবে
+  // Client side fallback (যদি প্রয়োজন হয়)
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || "http://localhost:3000";
-
-  try {
-    response = await fetch(`${baseUrl}/booksData.json`);
-  } catch (error) {
-    console.log("Error fetching Book data:", error);
-    throw error;
-  }
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch books data");
-  }
-
-  const data = await response.json();
-  return data;
+  const response = await fetch(`${baseUrl}/booksData.json`);
+  if (!response.ok) throw new Error("Failed to fetch books data");
+  return response.json();
 };
 
 const Books = async () => {
