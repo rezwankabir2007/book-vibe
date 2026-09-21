@@ -5,6 +5,7 @@ import Navbar from "@/components/shared/Navbar";
 import BooksProvider from "@/components/BooksContext";
 import { ToastContainer } from "react-toastify";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,7 +32,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BooksProvider>
           <Navbar />
           {children}
+
           <h2 className="font-bold text-5xl text-center bg-blue-700 h-80 w-full">Footer</h2>
+        
+          
 
            <ToastContainer />
         </BooksProvider>

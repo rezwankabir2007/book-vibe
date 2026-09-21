@@ -2,7 +2,7 @@ import ReadButton from "@/components/BookDetails/ReadButton";
 import WishListButton from "@/components/BookDetails/WishListButton";
 import Image from "next/image";
 
-type Book = {
+interface Book {
     bookId: number;
     image: string;
     bookName: string;
@@ -14,25 +14,34 @@ type Book = {
     totalPages: number;
     yearOfPublishing: number;
     publisher: string;
-};
+}
+
+interface BookPageProps {
+    params: Promise<{ id: string }>;
+}
 
 const getBooks = async (): Promise<Book[]> => {
-    const response = await fetch(
-        "http://localhost:3000/booksData.json"
+  let response: Response;
+
+  try {
+    response = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/booksData.json`
     );
+  } catch (error) {
+    console.log("Error fetching Book data:", error);
+    throw error;
+  }
 
     if (!response.ok) {
         throw new Error("Failed to fetch books");
     }
 
-    return response.json();
+    return response.json() as Promise<Book[]>;
 };
 
 export default async function BookPage({
     params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
+}: BookPageProps) {
     // URL থেকে id নেওয়া
     const { id } = await params;
 

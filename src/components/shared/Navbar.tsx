@@ -14,6 +14,11 @@ const Navbar = () => {
         <li><Link href='/books'>Books</Link></li>
 
         <li><Link href='/listed-books'>Listed</Link></li>
+
+        <li><Link href='/read-books'>ReadBooks</Link></li>
+        
+        <li><Link href='../footer/footer.tsx'>Footer</Link></li>
+
        
 
   

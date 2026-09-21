@@ -46,18 +46,18 @@ const ListBook = () => {
 
 
 
-     <div className="text-center my-4">
-       <select
-       value={sortBy}
-       onChange={(e)=> setSortBy(e.target.value as "rating" | "pages" | "year")}
-       defaultValue="Pick a Runtime"
-        className="select select-success">
-        <option disabled={true}>Sort by</option>
-        <option value={"rating"}>Rating</option>
-        <option value={"pages"}>Number of Paages</option>
-        <option value={"year"}>Published Year</option>
-      </select>
-     </div>
+    <div className="text-center my-4">
+  <select
+    value={sortBy}
+    onChange={(e) => setSortBy(e.target.value as "rating" | "pages" | "year")}
+    className="select select-success"
+  >
+    <option disabled>Sort by</option>
+    <option value="rating">Rating</option>
+    <option value="pages">Number of Pages</option>
+    <option value="year">Published Year</option>
+  </select>
+</div>
 
 
       {/* Tabs */}
@@ -79,10 +79,7 @@ const ListBook = () => {
               sortedReadBooks.map((book: IBook) => (
                 <ListedBooksCard
                   key={book.bookId}
-                  book={{
-                    ...book,
-                    review: book.review ?? "",
-                  }}
+                  book={{ ...book, review: String(book.rating) }}
                 />
               ))
             ) : (
@@ -117,10 +114,7 @@ const ListBook = () => {
               sortedWishlist.map((book: IBook) => (
                 <ListedBooksCard
                   key={book.bookId}
-                  book={{
-                    ...book,
-                    review: book.review ?? "",
-                  }}
+                  book={{ ...book, review: String(book.rating) }}
                 />
               ))
             ) : (
